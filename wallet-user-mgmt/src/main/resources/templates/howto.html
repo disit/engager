@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html 	lang="en"
+		xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+    	<meta charset="utf-8"/>
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<title>Wallet HOWTO</title>
+		
+		<link th:href="@{/image/favicon.png}" type="image/png" rel="icon"/>
+  
+        <link th:href="@{/css/wallet-template.css}" rel="stylesheet"/>
+   		<link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+   		<link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" rel="stylesheet"/>
+    	<link href="//fonts.googleapis.com/css?family=Raleway" rel="stylesheet"/>
+    	<link th:href="@{/css/leaflet/leaflet.css}" rel="stylesheet"/>
+  		<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+  		<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+        <script th:src="@{/css/leaflet/leaflet.js}"></script>
+    	<script th:src="@{/js/jquery.form.js}"></script>
+    </head>  
+	<body>
+
+		<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+	            		<span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>                        
+			      	</button>
+			      	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2" sec:authorize="isAuthenticated()">
+	            		<span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>                        
+			      	</button>
+	      			<a class="navbar-brand" th:href="@{/}"><i class="fa fa-home fa-4" style="font-size: 24px;" aria-hidden="true"></i></a>
+	      			<img th:src="@{/image/disitlogo.png}" style="height: 40px; float: left; max-width: 200px; cursor: pointer; margin-top: 6px;" onclick="window.open('http://www.disit.org')"/>
+			    </div>
+	    		<div class="collapse navbar-collapse " id="myNavbar">
+	      			<ul class="nav navbar-nav navbar-right">
+		      			 <li><a th:href="@{/howto}">Come funziona</a></li>
+		      			 <li><a href="#">Guadagna punti</a></li>
+		      			 <li><a href="#">Premi</a></li>
+		      			 <li><a href="#">Termini d'uso</a></li>      			 
+		    			 <li><!-- error messages -->
+					        <div th:if="${param.error}">
+						        <div class="col-xs-9 ">
+						            <p style="color:red" th:text="${error}"></p>
+						        </div>
+			            	</div>
+					        <div th:if="${param.logout}">
+					        	<div class="col-xs-9 ">
+					            	<p style="color:blue" th:text="${logout}"></p>
+					            </div>
+					        </div>
+					        <div th:if="${message}">
+					        	<div class="col-xs-9 ">
+					            	<p style="color:blue" th:text="${message}"></p>
+					            </div>
+					        </div>
+						</li>
+			            <li sec:authorize="isAnonymous()">
+							<!-- login form -->
+					        <form th:action="@{/signin/authenticate}" method="post">
+					            <div class="row ">
+					            	<div class="col-xs-4 ">
+					            		<input type="text" class="form-control margin-bottom" name="username" placeholder="e-mail"/>
+					            	</div>
+				            		<div class="col-xs-4 ">
+						            	<input type="password" class="form-control margin-bottom" name="password" placeholder="password"/>
+					            	</div>
+					               	<div class="col-xs-4 ">
+					            	<input class="btn btn-primary" type="submit" value="Entra"/>
+					            	</div>
+				            	</div>
+					            <div class="row ">
+					            	<div class="form-group col-xs-4">
+					            	<input type="hidden" name="remember-me" value="off" />
+					            	<p><input type="checkbox" name="rememberme" value="1" onclick="rememberme(this)"/>Rimani collegato</p>
+					            	</div>
+					            	<div class="col-xs-4 ">
+					            	<a th:href="@{/forgotpwd}"><p>Recupera password</p></a>
+					            	</div>
+									<div class="col-xs-4 ">
+				        	  		<a th:href="@{/registration}"><p>Registrazione</p></a>
+				        			</div>
+					            </div>
+					        </form>
+				        </li>
+				        <li sec:authorize="isAnonymous()">
+							<!-- fb login -->
+							<form name="fb_signin" id="fb_signin" th:action="@{/signin/facebook}" method="POST">
+								<input type="hidden" name="scope" value="email" />
+					            <input type="hidden" name="remember-me" value="off" />						
+								<button type="submit"><img th:src="@{/social/facebook_s.png}"></img></button>
+							</form>			
+							<!-- google login-->
+							<form th:action="@{/signin/google}" method="POST">
+							    <input type="hidden" name="scope" value="email profile" />
+							    <input type="hidden" name="request_visible_actions" value="http://schemas.google.com/AddActivity http://schemas.google.com/BuyActivity http://schemas.google.com/CheckInActivity http://schemas.google.com/CommentActivity http://schemas.google.com/CreateActivity http://schemas.google.com/DiscoverActivity http://schemas.google.com/ListenActivity http://schemas.google.com/ReserveActivity http://schemas.google.com/ReviewActivity http://schemas.google.com/WantActivity"/>
+							    <input type="hidden" name="access_type" value="offline"/>
+							    <input type="hidden" name="remember-me" value="off" />
+							    <button type="submit" ><img th:src="@{/social/google_s.png}"></img></button>
+							</form>
+						</li>	
+						<li sec:authorize="isAuthenticated()">  
+							Benvenuto<br/><div sec:authentication="name"/>
+						</li>
+						<li sec:authorize="isAuthenticated()">
+							<form th:action="@{/logout}" method="post"><input type="submit" class="btn btn-primary" value="Esci"/></form>
+	                    </li>
+						<li sec:authorize="isAuthenticated()">  
+					        <div sec:authorize="hasAuthority('ROLE_MANAGER')">
+								<!--<p style="color:blue" class="navbar-brand" >Entra nel tuo profilo</p> -->
+	   							<a th:href="@{/manager}"><p>Area personale</p></a> 
+							</div>
+						</li>
+						<li sec:authorize="isAuthenticated()">  
+					        <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+								<!--<p style="color:blue" class="navbar-brand" >Entra nel tuo profilo</p> -->
+	   							<a th:href="@{/admin}"><p>Area personale</p></a> 
+							</div>
+						</li>
+         			</ul>
+	        	</div>
+        		<div class="navbar-user collapse navbar-collapse" id="myNavbar2" sec:authorize="isAuthenticated()" >
+                	<ul class="nav navbar-nav navbar-center">
+	                	<li sec:authorize="hasAuthority('ROLE_USER')"><a th:href="@{/user}">Home</a></li>                
+	                    <li><a th:href="@{/profile}">Profilo</a></li>
+	                    <li><a th:href="@{/activities}">Attività</a></li>
+	                    <li><a th:href="@{/settings}">Impostazioni</a></li>
+	                    <li><a th:href="@{/privacy}">Privacy</a></li>
+	                </ul>
+	            </div>
+	        </div>
+	 	</nav>
+ 
+        <div class="col-sm-6 col-sm-offset-3">
+       		Tieni acceso il GPS durante i tuoi spostamenti
+		</div>     
+ 
+        <div class="col-sm-6 col-sm-offset-3">
+       		<figure>
+		    	<figcaption>Configura cosi' il tuo cellulare Huawei</figcaption>
+				 <img th:src="@{/image/huawei-info.png}"></img>
+			</figure>
+		</div>
+		
+		 <div class="col-sm-6 col-sm-offset-3">
+       		<figure>
+		    	<figcaption>Configura cosi' il tuo cellulare Samsung</figcaption>
+				 <img th:src="@{/image/samsung-info.jpg}"></img>
+			</figure>
+		</div>
+		
+		<div class="col-sm-6 col-sm-offset-3">
+       		Per ogni problema sul funzionamente della app contatta: app@disit.org
+		</div>     
+ 
+		
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+			function rememberme(box) {
+				var vis = (box.checked) ? "on" : "off";
+				var inputs = document.getElementsByName("remember-me");
+			
+				for (i=0;i<inputs.length;i++){
+					inputs[i].value=vis;
+				}
+			}
+			/*]]>*/
+		</script>
+    </body>
+</html>

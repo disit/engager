@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html 	lang="en"
+		xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8"/>
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<title>Wallet SIGNIN</title>
+		
+		<link th:href="@{/image/favicon.png}" type="image/png" rel="icon"/>
+        <link th:href="@{/css/wallet-template.css}" rel="stylesheet"/>
+  
+  		<link  th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+  		<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+  		<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+    	<link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" rel="stylesheet"/>
+    	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+    </head>
+    <body>
+
+		<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+	            		<span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>                        
+			      	</button>
+			      	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2" sec:authorize="isAuthenticated()">
+	            		<span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>                        
+			      	</button>
+	      			<a class="navbar-brand" th:href="@{/}"><i class="fa fa-home fa-4" style="font-size: 24px;" aria-hidden="true"></i></a>
+	      			<img th:src="@{/image/disitlogo.png}" style="height: 40px; float: left; max-width: 200px; cursor: pointer; margin-top: 6px;" onclick="window.open('http://www.disit.org')"/>
+			    </div>
+	    		<div class="collapse navbar-collapse " id="myNavbar">
+	      			<ul class="nav navbar-nav navbar-right">
+		      			 <li><a th:href="@{/howto}">Come funziona</a></li>
+		      			 <li><a href="#">Guadagna punti</a></li>
+		      			 <li><a href="#">Premi</a></li>
+		      			 <li><a href="#">Termini d'uso</a></li>      			 
+		    			 <li><!-- error messages -->
+					        <div th:if="${param.error}">
+						        <div class="col-xs-9 ">
+						            <p style="color:red" th:text="${error}"></p>
+						        </div>
+			            	</div>
+					        <div th:if="${param.logout}">
+					        	<div class="col-xs-9 ">
+					            	<p style="color:blue" th:text="${logout}"></p>
+					            </div>
+					        </div>
+					        <div th:if="${message}">
+					        	<div class="col-xs-9 ">
+					            	<p style="color:blue" th:text="${message}"></p>
+					            </div>
+					        </div>
+						</li>
+			            <li sec:authorize="isAuthenticated()">  
+							Benvenuto<br/><div sec:authentication="name"/>
+						</li>
+						<li sec:authorize="isAuthenticated()">
+							<form th:action="@{/logout}" method="post"><input type="submit" class="btn btn-primary" value="Esci"/></form>
+	                    </li>
+						<li sec:authorize="isAuthenticated()">  
+					        <div sec:authorize="hasAuthority('ROLE_MANAGER')">
+								<!--<p style="color:blue" class="navbar-brand" >Entra nel tuo profilo</p> -->
+	   							<a th:href="@{/manager}"><p>Area personale</p></a> 
+							</div>
+						</li>
+						<li sec:authorize="isAuthenticated()">  
+					        <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+								<!--<p style="color:blue" class="navbar-brand" >Entra nel tuo profilo</p> -->
+	   							<a th:href="@{/admin}"><p>Area personale</p></a> 
+							</div>
+						</li>
+         			</ul>
+	        	</div>
+        		<div class="navbar-user collapse navbar-collapse" id="myNavbar2" sec:authorize="isAuthenticated()" >
+                	<ul class="nav navbar-nav navbar-center">
+	                	<li sec:authorize="hasAuthority('ROLE_USER')"><a th:href="@{/user}">Home</a></li>                
+	                    <li><a th:href="@{/profile}">Profilo</a></li>
+	                    <li><a th:href="@{/activities}">Attività</a></li>
+	                    <li><a th:href="@{/settings}">Impostazioni</a></li>
+	                    <li><a th:href="@{/privacy}">Privacy</a></li>
+	                </ul>
+	            </div>
+	        </div>
+	 	</nav>
+
+		<!-- error messages -->
+        <div th:if="${param.error}">
+            <p th:text="${error}"></p>
+        </div>
+	        
+         <div class="container" sec:authorize="isAuthenticated()">
+         	Sei gia' correttamente autenticato nel sistema
+         </div>
+	        
+        <div class="container" sec:authorize="!isAuthenticated()">
+	        <!-- login form -->
+	        <div class="login-form">
+		        <form th:action="@{/signin/authenticate}" method="post">
+		            <div><label> Email : <input type="text" name="username"/> </label></div>
+		            <div><label> Password: <input type="password" name="password"/> </label></div>
+					<input type="hidden" name="remember-me" value="off" />
+		            <div><input type="submit" value="Sign In"/></div>
+		        </form>
+	        </div>
+	        <!-- fb login -->
+			<form name="fb_signin" id="fb_signin" th:action="@{/signin/facebook}" method="POST">
+				<input type="hidden" name="scope" value="email" />
+				<input type="hidden" name="remember-me" value="off" />
+				<button type="submit" ><img th:src="@{/social/facebook/sign-in-with-facebook.png}"></img></button>		
+			</form>
+			<!-- li form -->
+			<!-- 			<form name="li_signin" id="li_signin" th:action="@{/signin/linkedin}" method="POST"> -->
+			<!-- 				<input type="hidden" name="scope" value="r_basicprofile r_emailaddress"/> -->
+			<!-- 				<input type="hidden" name="remember-me" value="off" /> -->
+			<!-- 				<button type="submit" class="btn btn-large btn-primary">Sign in to Linkedin</button> -->
+			<!-- 			</form> -->
+			<!--  tw login -->
+			<!-- 			<form name="tw_signin" id="tw_signin" th:action="@{/signin/twitter}" method="POST"> -->
+			<!-- 				<input type="hidden" name="remember-me" value="off" /> -->
+			<!-- 				<button type="submit" ><img th:src="@{/social/twitter/sign-in-with-twitter-d.png}"></img></button> -->
+			<!-- 			</form> -->
+			<!-- google login -->		
+			<form th:action="@{/signin/google}" method="POST">
+				    <input type="hidden" name="scope" value="email profile" />
+				    <input type="hidden" name="request_visible_actions" value="http://schemas.google.com/AddActivity http://schemas.google.com/BuyActivity http://schemas.google.com/CheckInActivity http://schemas.google.com/CommentActivity http://schemas.google.com/CreateActivity http://schemas.google.com/DiscoverActivity http://schemas.google.com/ListenActivity http://schemas.google.com/ReserveActivity http://schemas.google.com/ReviewActivity http://schemas.google.com/WantActivity"/>
+				    <input type="hidden" name="access_type" value="offline"/>
+				    <input type="hidden" name="approval_prompt" value="force"/>
+				    <input type="hidden" name="remember-me" value="off" />
+				    <button type="submit" class="btn btn-large btn-primary">Sign in with Google</button>
+			</form>
+		    <div><label>Remember-me: <input type="checkbox" name="rememberme" value="1" onclick="rememberme(this)"/> </label></div>	
+			<p>... or register via email <a th:href="@{/registration}">here</a></p>
+			<p>(if you forgot pwd click <a th:href="@{/forgotpwd}">here</a>)</p>
+		</div>
+		
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+			function rememberme(box) {
+				var vis = (box.checked) ? "on" : "off";
+				var inputs = document.getElementsByName("remember-me");
+				for (i=0;i<inputs.length;i++){
+					inputs[i].value=vis;
+				}
+			}
+			/*]]>*/
+		</script>
+    </body>
+</html>

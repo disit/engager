@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+	
+		<property name="connection.url">jdbc:mysql://192.168.0.234:3306/sensors?useSSL=false</property>
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="connection.username">root</property>
+		<property name="connection.password">kodekode</property>
+		
+		<property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
+		<property name="hbm2ddl.auto">validate</property><!-- DB schema just to validate -->
+		<property name="show_sql">false</property>
+		<property name="format_sql">false</property>
+
+		<property name="hibernate.c3p0.initial_pool_size">2</property>
+		<property name="hibernate.c3p0.min_size">2</property>
+		<property name="hibernate.c3p0.max_size">2</property>
+		<property name="hibernate.c3p0.timeout">300</property>
+		<property name="hibernate.c3p0.max_statements">50</property>
+		<property name="hibernate.c3p0.idle_test_period">3000</property>
+
+		<property name="hibernate.connection.zeroDateTimeBehavior">convertToNull</property> 
+
+	</session-factory>
+</hibernate-configuration>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html 	lang="en"
+		xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+    	<meta charset="utf-8"/>
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<title>Wallet prize</title>
+		
+		<link th:href="@{/image/favicon.png}" type="image/png" rel="icon"/>
+        <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/css/wallet-template.css}" rel="stylesheet"/>
+    </head>
+    <body>
+
+		<nav class="navbar navbar-user navbar-fixed-top">
+      		<div class="container">
+        		<div class="navbar-header">
+          			<a class="navbar-brand" href="#">Wallet prize</a>
+        		</div>
+        		<div id="navbar" class="collapse navbar-collapse">
+          			<ul class="nav navbar-nav navbar-right">
+						<li><a th:href="@{/user}">Done/back</a></li> 
+          			</ul>
+        		</div>
+        	</div>
+		</nav>
+		
+    	<h1 th:inline="text">Hello <span sec:authentication="name"/><span sec:authentication="principal.authorities"/></h1>
+       
+        Ecosystema name: <span th:text="${ecosystemname}">0</span><br/>
+        
+        Current Point for this ecosystema: <span th:text="${ecosystempoint}">0</span>
+        
+		<table class="table">
+			<tr>
+				<th>Avail prize</th>
+				<th>Point</th>
+			</tr>
+		    <tr th:each="message : ${data1}">
+	        	<td th:text="${message[0]}">1</td>
+	        	<td th:text="${message[1]}">1</td>
+	        	<td th:if="${message[1] &lt; ecosystempoint or message[1] == ecosystempoint }"><a th:href="LINK_TO_INCASSA">INCASSA</a></td>
+	    	</tr>
+	    	<tr th:if="${pager1.getTotalPages() == 0}">
+	    		<td th:text="none">1</td>
+	    	</tr>
+    	</table>
+    	
+    	<div th:if="${pager1.getTotalPages() &gt; 1}" class="col-md-12 text-center">
+	   		<div class="pagination pagination-centered">
+				<ul class="pagination">
+					<li th:class="${current1==1}?'disable':''">
+						<span th:if='${current1==1}'>First</span>
+						<a th:if='${current1!=1}' th:href="@{/prize/{id}/1/{number2}(id=${id},number2=${current2})}">First</a>
+					</li>
+					<li th:class="${current1!=1}?'':'disable'">
+						<span th:if='${current1==1}'>&larr;</span>
+						<a th:if='${current1!=1}' th:href="@{/prize/{id}/{number1}/{number2}(id=${id},number1=${current1-1},number2=${current2})}" title='Go to previous page'>&larr;</a>
+					</li>
+					<li	th:each="item : ${#numbers.sequence(pager1.getStartPage(), pager1.getEndPage())}" th:class="${item==current1?'active':''}">
+						<span th:if='${item==current1}' th:text="${item}">1</span>
+						<a th:if='${item!=current1}' th:href="@{/prize/{id}/{number1}/{number2}(id=${id},number1=${item},number2=${current2})}">
+							<span th:text="${item}">1</span>
+						</a>
+					</li>
+					<li th:class="${current1!=pager1.getTotalPages()}?'':'disable'">
+						<span th:if='${current1==pager1.getTotalPages()}'>&rarr;</span>
+						<a th:if='${current1!=pager1.getTotalPages()}' th:href="@{/prize/{id}/{number1}/{number2}(id=${id},number1=${current1+1},number2=${current2})}" title='Go to next page'>&rarr;</a>
+					</li>
+					<li th:class="${current1==pager1.getTotalPages()}?'disable':''">
+						<span th:if='${current1==pager1.getTotalPages()}'>Last</span>
+						<a th:if='${current1!=pager1.getTotalPages()}' th:href="@{/prize/{id}/{number1}/{number2}(id=${id},number1=${pager1.getTotalPages()},number2=${current2})}">Last</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+    	
+		<table class="table">
+			<tr>
+				<th>Previously incassed prize</th>
+				<th>WHEN</th>
+			</tr>
+		    <tr th:each="message : ${data2}">
+	        	<td th:text="${message[0]}">1</td>
+	        	<td th:text="${message[1]}">1</td>
+	    	</tr>
+	    	<tr th:if="${pager2.getTotalPages() == 0}">
+	    		<td th:text="none">1</td>
+	    	</tr>
+    	</table>
+	   	<div th:if="${pager2.getTotalPages() &gt; 1}" class="col-md-12 text-center">
+	   		<div class="pagination pagination-centered">
+				<ul class="pagination">
+					<li th:class="${current2==1}?'disable':''">
+						<span th:if='${current2==1}'>First</span>
+						<a th:if='${current2!=1}' th:href="@{/prize/{id}/{number1}/1(id=${id},number1=${current1})}">First</a>
+					</li>
+					<li th:class="${current2!=1}?'':'disable'">
+						<span th:if='${current2==1}'>&larr;</span>
+						<a th:if='${current2!=1}' th:href="@{/prize/{id}/{number1}/{number2}(id=${id},number1=${current1},number2=${current2-1})}" title='Go to previous page'>&larr;</a>
+					</li>
+					<li	th:each="item : ${#numbers.sequence(pager2.getStartPage(), pager2.getEndPage())}" th:class="${item==current2?'active':''}">
+						<span th:if='${item==current2}' th:text="${item}">1</span>
+						<a th:if='${item!=current2}' th:href="@{/prize/{id}/{number1}/{number2}(id=${id},number1=${current1},number2=${item})}">
+							<span th:text="${item}">1</span>
+						</a>
+					</li>
+					<li th:class="${current2!=pager2.getTotalPages()}?'':'disable'">
+						<span th:if='${current2==pager2.getTotalPages()}'>&rarr;</span>
+						<a th:if='${current2!=pager2.getTotalPages()}' th:href="@{/prize/{id}/{number1}/{number2}(id=${id},number1=${current1},number2=${current2+1})}" title='Go to next page'>&rarr;</a>
+					</li>
+					<li th:class="${current2==pager2.getTotalPages()}?'disable':''">
+						<span th:if='${current2==pager2.getTotalPages()}'>Last</span>
+						<a th:if='${current2!=pager2.getTotalPages()}' th:href="@{/prize/{id}/{number1}/{number2}(id=${id},number1=${current1},number2=${pager2.getTotalPages()})}">Last</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>

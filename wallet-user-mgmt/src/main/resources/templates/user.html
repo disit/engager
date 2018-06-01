@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html 	lang="en"
+		xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+    	<meta charset="utf-8"/>
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<title>Wallet USER HOME</title>
+		
+		<link th:href="@{/image/favicon.png}" type="image/png" rel="icon"/>
+  
+        <link th:href="@{/css/wallet-template.css}" rel="stylesheet"/>
+   		<link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+   		<link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" rel="stylesheet"/>
+    	<link href="//fonts.googleapis.com/css?family=Raleway" rel="stylesheet"/>
+    	<link th:href="@{/css/leaflet/leaflet.css}" rel="stylesheet"/>
+  		<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+  		<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+        <script th:src="@{/css/leaflet/leaflet.js}"></script>
+    	<script th:src="@{/js/jquery.form.js}"></script>
+    </head>  
+	<body>
+
+		<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+			<div class="navbar-header ">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
+            		<span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>                        
+		      	</button>
+		      	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2">
+            		<span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>                        
+		      	</button>
+		      	
+      			<a class="navbar-brand" th:href="@{/}"><i class="fa fa-home fa-4" style="font-size: 24px;" aria-hidden="true"></i></a>
+      			<img th:src="@{/image/disitlogo.png}" style="height: 40px; float: left; max-width: 200px; cursor: pointer; margin-top: 6px;" onclick="window.open('http://www.disit.org')"/>
+		    </div>
+    		<div class="collapse navbar-collapse" id="myNavbar1">
+      			<ul class="nav navbar-nav navbar-right">
+      			 	<li><a th:href="@{/howto}">Come funziona</a></li>
+      			 	<li><a href="#">Guadagna punti</a></li>
+      			 	<li><a href="#">Premi</a></li>
+      			 	<li><a href="#">Termini d'uso</a></li>      			 	
+					<li><!-- error messages -->
+       					<div th:if="${param.successregistration}">
+           					<p class="navbar-brand" th:text="${successregistration}"></p>
+       					</div>
+       				</li>
+					<li>
+				   		<div th:if="${message}">
+					    	<p class="navbar-brand" th:text="${message}"></p>
+				    	</div>
+				    </li>
+					<li>Benvenuto<br/><div sec:authentication="name"/></li>
+					<li><form th:action="@{/logout}" method="post"><input type="submit" class="btn btn-primary"  value="Esci"/></form></li>
+				</ul>
+			</div>
+			<div class="navbar-user collapse navbar-collapse" id="myNavbar2">
+                <ul class="nav navbar-nav navbar-center">
+                   	<li sec:authorize="hasAuthority('ROLE_USER')"><a th:href="@{/user}">Home</a></li>
+                    <li><a th:href="@{/profile}">Profilo</a></li>
+                    <li><a th:href="@{/activities}">Attività</a></li>
+                    <li><a th:href="@{/settings}">Impostazioni</a></li>
+                    <li><a th:href="@{/privacy}">Privacy</a></li>
+                </ul>
+            </div>
+		</nav>
+		
+<!-- 		<sec:authorize access="isRememberMe()"> -->
+<!-- 			<h2># This user is login by "Remember Me Cookies".</h2> -->
+<!-- 		</sec:authorize> -->
+<!-- 		<sec:authorize access="isFullyAuthenticated()"> -->
+<!-- 			<h2># This user is login by username / password.</h2> -->
+<!-- 		</sec:authorize> -->
+<!--         <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1> -->		
+		
+    	<div class="col-sm-4 col-sm-offset-2">       
+	        Totali punti collezionati dall'inizio della campagna:<span th:text="${totalpoint}"/>
+			<table class="table">
+				<tr>
+					<th>Data</th>
+					<th>Regola</th>
+					<th>Punti</th>
+				</tr>
+			    <tr th:each="message : ${data1}">
+		        	<td th:text="${message[0]}">1</td>
+		        	<td th:text="${message[1]}">1</td>
+		        	<td th:text="${message[2]}">1</td>
+<!-- 		        	<td><a th:href="@{/prize/{ecoid}(ecoid=${message[2]})}">Incassa</a></td> -->
+		    	</tr>
+		    	<tr th:if="${pager1.getTotalPages() == 0}">
+		    		<td th:text="none">1</td>
+		    	</tr>
+	    	</table>
+		   	<div th:if="${pager1.getTotalPages() &gt; 1}" class="col-md-12 text-center">
+		   		<div class="pagination pagination-centered">
+					<ul class="pagination">
+						<li th:class="${current1==1}?'disable':''">
+							<span th:if='${current1==1}'>First</span>
+							<a th:if='${current1!=1}' th:href="@{/user/1/{number2}/{number3}(number2=${current2},number3=${current3})}">First</a>
+						</li>
+						<li th:class="${current1!=1}?'':'disable'">
+							<span th:if='${current1==1}'>&larr;</span>
+							<a th:if='${current1!=1}' th:href="@{/user/{number1}/{number2}/{number3}(number1=${current1-1},number2=${current2},number3=${current3})}" title='Go to previous page'>&larr;</a>
+						</li>
+						<li	th:each="item : ${#numbers.sequence(pager1.getStartPage(), pager1.getEndPage())}" th:class="${item==current1?'active':''}">
+							<span th:if='${item==current1}' th:text="${item}">1</span>
+							<a th:if='${item!=current1}' th:href="@{/user/{number1}/{number2}/{number3}(number1=${item},number2=${current2},number3=${current3})}">
+								<span th:text="${item}">1</span>
+							</a>
+						</li>
+						<li th:class="${current1!=pager1.getTotalPages()}?'':'disable'">
+							<span th:if='${current1==pager1.getTotalPages()}'>&rarr;</span>
+							<a th:if='${current1!=pager1.getTotalPages()}' th:href="@{/user/{number1}/{number2}/{number3}(number1=${current1+1},number2=${current2},number3=${current3})}" title='Go to next page'>&rarr;</a>
+						</li>
+						<li th:class="${current1==pager1.getTotalPages()}?'disable':''">
+							<span th:if='${current1==pager1.getTotalPages()}'>Last</span>
+							<a th:if='${current1!=pager1.getTotalPages()}' th:href="@{/user/{number1}/{number2}/{number3}(number1=${pager1.getTotalPages()},number2=${current2},number3=${current3})}">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+	        Totali punti collezionati negli ultimi 7 giorni:<span th:text="${point7days}"/>
+			<table class="table">
+				<tr>
+					<th>Data</th>
+					<th>Regola</th>
+					<th>Punti</th>
+				</tr>
+			    <tr th:each="message : ${data2}">
+		        	<td th:text="${message[0]}">1</td>
+		        	<td th:text="${message[1]}">1</td>
+		        	<td th:text="${message[2]}">1</td>
+<!-- 		        	<td><a th:href="@{/prize/{ecoid}(ecoid=${message[2]})}">Incassa</a></td> -->
+		    	</tr>
+		    	<tr th:if="${pager2.getTotalPages() == 0}">
+		    		<td th:text="none">1</td>
+		    	</tr>
+	    	</table>
+
+		   	<div th:if="${pager2.getTotalPages() &gt; 1}" class="col-md-12 text-center">
+		   		<div class="pagination pagination-centered">
+					<ul class="pagination">
+						<li th:class="${current2==1}?'disable':''">
+							<span th:if='${current2==1}'>First</span>
+							<a th:if='${current2!=1}' th:href="@{/user/{number1}/1/{number3}(number1=${current1},number3=${current3})}">First</a>
+						</li>
+						<li th:class="${current2!=1}?'':'disable'">
+							<span th:if='${current2==1}'>&larr;</span>
+							<a th:if='${current2!=1}' th:href="@{/user/{number1}/{number2}/{number3}(number1=${current1},number2=${current2-1},number3=${current3})}" title='Go to previous page'>&larr;</a>
+						</li>
+						<li	th:each="item : ${#numbers.sequence(pager2.getStartPage(), pager2.getEndPage())}" th:class="${item==current2?'active':''}">
+							<span th:if='${item==current2}' th:text="${item}">1</span>
+							<a th:if='${item!=current2}' th:href="@{/user/{number1}/{number2}/{number3}(number1=${current1},number2=${item},number3=${current3})}">
+								<span th:text="${item}">1</span>
+							</a>
+						</li>
+						<li th:class="${current2!=pager2.getTotalPages()}?'':'disable'">
+							<span th:if='${current2==pager2.getTotalPages()}'>&rarr;</span>
+							<a th:if='${current2!=pager2.getTotalPages()}' th:href="@{/user/{number1}/{number2}/{number3}(number1=${current1},number2=${current2+1},number3=${current3})}" title='Go to next page'>&rarr;</a>
+						</li>
+						<li th:class="${current2==pager2.getTotalPages()}?'disable':''">
+							<span th:if='${current2==pager2.getTotalPages()}'>Last</span>
+							<a th:if='${current2!=pager2.getTotalPages()}' th:href="@{/user/{number1}/{number2}/{number3}(number1=${current1},number2=${pager2.getTotalPages()},number3=${current3})}">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+			<table class="table">
+				<tr>
+					<th>Data</th>
+					<th>Premi incassati</th>
+				</tr>
+			    <tr th:each="message : ${data3}">
+		        	<td th:text="${message[0]}">1</td>
+		        	<td th:text="${message[1]}">1</td>
+		    	</tr>
+		    	<tr th:if="${pager3.getTotalPages() == 0}">
+		    		<td th:text="none">1</td>
+		    	</tr>
+	    	</table>
+
+		   	<div th:if="${pager3.getTotalPages() &gt; 1}" class="col-md-12 text-center">
+		   		<div class="pagination pagination-centered">
+					<ul class="pagination">
+						<li th:class="${current3==1}?'disable':''">
+							<span th:if='${current3==1}'>First</span>
+							<a th:if='${current3!=1}' th:href="@{/user/{number1}/{number2}/1(number1=${current1},number2=${current2})}">First</a>
+						</li>
+						<li th:class="${current3!=1}?'':'disable'">
+							<span th:if='${current3==1}'>&larr;</span>
+							<a th:if='${current3!=1}' th:href="@{/user/{number1}/{number2}/{number3}(number1=${current1},number2=${current2},number3=${current3-1})}" title='Go to previous page'>&larr;</a>
+						</li>
+						<li	th:each="item : ${#numbers.sequence(pager3.getStartPage(), pager3.getEndPage())}" th:class="${item==current3?'active':''}">
+							<span th:if='${item==current3}' th:text="${item}">1</span>
+							<a th:if='${item!=current3}' th:href="@{/user/{number1}/{number2}/{number3}(number1=${current1},number2=${current2},number3=${item})}">
+								<span th:text="${item}">1</span>
+							</a>
+						</li>
+						<li th:class="${current3!=pager3.getTotalPages()}?'':'disable'">
+							<span th:if='${current3==pager3.getTotalPages()}'>&rarr;</span>
+							<a th:if='${current3!=pager3.getTotalPages()}' th:href="@{/user/{number1}/{number2}/{number3}(number1=${current1},number2=${current2},number3=${current3+1})}" title='Go to next page'>&rarr;</a>
+						</li>
+						<li th:class="${current3==pager3.getTotalPages()}?'disable':''">
+							<span th:if='${current3==pager3.getTotalPages()}'>Last</span>
+							<a th:if='${current3!=pager3.getTotalPages()}' th:href="@{/user/{number1}/{number2}/{number3}(number1=${current1},number2=${current2},number3=${pager3.getTotalPages()})}">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+		</div>
+	</body>
+</html>

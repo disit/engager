@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html 	lang="en"
+		xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+    	<meta charset="utf-8"/>
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<title>Wallet RECOVERY PASSWORD</title>
+		
+		<link th:href="@{/image/favicon.png}" type="image/png" rel="icon"/>
+  
+        <link th:href="@{/css/wallet-template.css}" rel="stylesheet"/>
+   		<link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+   		<link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" rel="stylesheet"/>
+    	<link href="//fonts.googleapis.com/css?family=Raleway" rel="stylesheet"/>
+    	<link th:href="@{/css/leaflet/leaflet.css}" rel="stylesheet"/>
+  		<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+  		<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+        <script th:src="@{/css/leaflet/leaflet.js}"></script>
+    	<script th:src="@{/js/jquery.form.js}"></script>
+    </head>  
+	<body>
+
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+	            		<span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>                        
+			      	</button>
+			      	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2" sec:authorize="isAuthenticated()">
+	            		<span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>                        
+			      	</button>
+	      			<a class="navbar-brand" th:href="@{/}"><i class="fa fa-home fa-4" style="font-size: 24px;" aria-hidden="true"></i></a>
+	      			<img th:src="@{/image/disitlogo.png}" style="height: 40px; float: left; max-width: 200px; cursor: pointer; margin-top: 6px;" onclick="window.open('http://www.disit.org')"/>
+			    </div>
+	    		<div class="collapse navbar-collapse " id="myNavbar">
+	      			<ul class="nav navbar-nav navbar-right">
+		      			 <li><a th:href="@{/howto}">Come funziona</a></li>
+		      			 <li><a href="#">Guadagna punti</a></li>
+		      			 <li><a href="#">Premi</a></li>
+		      			 <li><a href="#">Termini d'uso</a></li>      			 
+		    			 <li><!-- error messages -->
+					        <div th:if="${param.error}">
+						        <div class="col-xs-9 ">
+						            <p style="color:red" th:text="${error}"></p>
+						        </div>
+			            	</div>
+					        <div th:if="${param.logout}">
+					        	<div class="col-xs-9 ">
+					            	<p style="color:blue" th:text="${logout}"></p>
+					            </div>
+					        </div>
+					        <div th:if="${message}">
+					        	<div class="col-xs-9 ">
+					            	<p style="color:blue" th:text="${message}"></p>
+					            </div>
+					        </div>
+						</li>
+			            <li sec:authorize="isAuthenticated()">  
+							Benvenuto<br/><div sec:authentication="name"/>
+						</li>
+						<li sec:authorize="isAuthenticated()">
+							<form th:action="@{/logout}" method="post"><input type="submit" class="btn btn-primary" value="Esci"/></form>
+	                    </li>
+						<li sec:authorize="isAuthenticated()">  
+					        <div sec:authorize="hasAuthority('ROLE_MANAGER')">
+								<!--<p style="color:blue" class="navbar-brand" >Entra nel tuo profilo</p> -->
+	   							<a th:href="@{/manager}"><p>Area personale</p></a> 
+							</div>
+						</li>
+						<li sec:authorize="isAuthenticated()">  
+					        <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+								<!--<p style="color:blue" class="navbar-brand" >Entra nel tuo profilo</p> -->
+	   							<a th:href="@{/admin}"><p>Area personale</p></a> 
+							</div>
+						</li>
+         			</ul>
+	        	</div>
+        		<div class="navbar-user collapse navbar-collapse" id="myNavbar2" sec:authorize="isAuthenticated()" >
+                	<ul class="nav navbar-nav navbar-center">
+	                	<li sec:authorize="hasAuthority('ROLE_USER')"><a th:href="@{/user}">Home</a></li>                
+	                    <li><a th:href="@{/profile}">Profilo</a></li>
+	                    <li><a th:href="@{/activities}">Attività</a></li>
+	                    <li><a th:href="@{/settings}">Impostazioni</a></li>
+	                    <li><a th:href="@{/privacy}">Privacy</a></li>
+	                </ul>
+	            </div>
+	        </div>
+	 	</nav>
+		
+		 <div class="container" sec:authorize="isAuthenticated()">
+         	Sei gia' correttamente autenticato nel sistema
+         </div>
+	        
+        <div class="container" sec:authorize="!isAuthenticated()">
+		
+	        <!-- error messages -->
+	        <div class="login-form">
+		        <div th:if="${param.error}">
+		            <p th:text="${error}"></p>
+		        </div>
+		        <div th:if="${param.logout}">
+		            <p th:text="${logout}"></p>
+		        </div>
+		        
+		        Please insert the e-mail address of the account<br/>
+		        <form th:action="@{/forgotpwd}" method="post">
+		            <div><label>Email: <input type="text" name="username"/></label></div>
+		            <div><input type="submit" value="Send"/></div>
+		        </form>
+			</div>
+		</div>
+    </body>
+</html>

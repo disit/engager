@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html 	lang="en"
+		xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+    	<meta charset="utf-8"/>
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<title>Wallet USER PRIVACY</title>
+		
+		<link th:href="@{/image/favicon.png}" type="image/png" rel="icon"/>
+  
+        <link th:href="@{/css/wallet-template.css}" rel="stylesheet"/>
+   		<link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+   		<link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" rel="stylesheet"/>
+    	<link href="//fonts.googleapis.com/css?family=Raleway" rel="stylesheet"/>
+    	<link th:href="@{/css/leaflet/leaflet.css}" rel="stylesheet"/>
+  		<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+  		<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+        <script th:src="@{/css/leaflet/leaflet.js}"></script>
+    	<script th:src="@{/js/jquery.form.js}"></script>
+	</head>
+    <body>
+
+		<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+			<div class="navbar-header ">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
+            		<span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>                        
+		      	</button>
+		      	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2">
+            		<span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>                        
+		      	</button>
+		      	
+      			<a class="navbar-brand" th:href="@{/}"><i class="fa fa-home fa-4" style="font-size: 24px;" aria-hidden="true"></i></a>
+      			<img th:src="@{/image/disitlogo.png}" style="height: 40px; float: left; max-width: 200px; cursor: pointer; margin-top: 6px;" onclick="window.open('http://www.disit.org')"/>
+		    </div>
+    		<div class="collapse navbar-collapse" id="myNavbar1">
+      			<ul class="nav navbar-nav navbar-right">
+      			 	<li><a th:href="@{/howto}">Come funziona</a></li>
+      			 	<li><a href="#">Guadagna punti</a></li>
+      			 	<li><a href="#">Premi</a></li>
+      			 	<li><a href="#">Termini d'uso</a></li>      			 	
+					<li><!-- error messages -->
+       					<div th:if="${param.successregistration}">
+           					<p class="navbar-brand" th:text="${successregistration}"></p>
+       					</div>
+       				</li>
+					<li>
+				   		<div th:if="${message}">
+					    	<p class="navbar-brand" th:text="${message}"></p>
+				    	</div>
+				    </li>
+					<li>Benvenuto<br/><div sec:authentication="name"/></li>
+					<li><form th:action="@{/logout}" method="post"><input type="submit" class="btn btn-primary"  value="Esci"/></form></li>
+				</ul>
+			</div>
+			<div class="navbar-user collapse navbar-collapse" id="myNavbar2">
+                <ul class="nav navbar-nav navbar-center">
+                   	<li sec:authorize="hasAuthority('ROLE_USER')"><a th:href="@{/user}">Home</a></li>
+                    <li><a th:href="@{/profile}">Profilo</a></li>
+                    <li><a th:href="@{/activities}">Attività</a></li>
+                    <li><a th:href="@{/settings}">Impostazioni</a></li>
+                    <li><a th:href="@{/privacy}">Privacy</a></li>
+                </ul>
+            </div>
+		</nav>
+    
+	 		<div class="col-sm-6 col-sm-offset-3"> 
+
+				
+				<div class="mypanel panel panel-default"  >
+				
+					<div class="panel-body">
+						Dataset:<p th:text="${datasetLabel}">1</p>
+					</div>
+					
+					<div class="panel-body">               
+						<form method="post" action="/browse" th:action="@{/browse}" th:object="${settingsForm}"> 
+							<input type="hidden" th:field="*{dataset}" />
+							<!-- maggiore di uno -->
+							<div class="form-group row" th:if="${devices!=null and #lists.size(devices)>1}">
+								Device connessi:
+								<select class="form-control btn-mini" th:field="*{activedeviceid}" >
+									
+									<option th:each="device : ${devices}" th:value="${device.id}" th:text="${device.label}" th:selected="(${device.id} == *{activedeviceid})"/>
+				       			</select>
+				       			<input type="submit" name="refresh" value="Aggiorna" />
+					   		</div>
+					   		<!-- uguale a uno -->
+							<div class="form-group row" th:if="${#lists.size(devices)==1}">
+								Device connesso:<div th:text="${devices[0].label}">Test</div>
+					   		</div>
+						</form>
+					</div>				
+				
+					<div class="panel panel-default" th:if="${logs==null or #lists.size(logs)==0}">
+						<div class="panel-body">               
+							No data available
+						</div>								
+					</div>
+				
+					<div class="panel-body" th:if="${logs!=null and #lists.size(logs)!=0}">
+						<table class="table table-bordered table-hover specialCollapse">
+							<thead>
+						    	<tr>
+								    <th>#</th>
+								    <th>Time aquisition</th>
+								    <th>Time creation</th>
+								    <th>Value Type</th>
+								    <th>Value</th>
+							  	</tr>
+							</thead>
+							<tbody>
+					        	<tr th:each="log, iter : ${logs}">
+						        	<td th:text="${log.id}">1</td>
+						        	<td th:text="${log.dataTime}">1</td>
+						        	<td th:text="${log.insertTime}">1</td>
+						        	<td th:text="${log.valueType}">1</td>
+						        	<td th:text="${log.value}">1</td>
+						       	</tr>
+					    	</tbody>
+					    </table>
+					    
+					    
+					    <div th:if="${pager.getTotalPages() &gt; 1}" class="col-md-12 text-center">
+					   		<div class="pagination pagination-centered">
+								<ul class="pagination">
+									<li th:class="${current==1}?'disable':''">
+										<span th:if='${current==1}'>First</span>
+										<a th:if='${current!=1}' th:href="@{/browse/{device}/{dataset}/1(device=${settingsForm.activedeviceid},dataset=${settingsForm.dataset}}">First</a>
+									</li>
+									<li th:class="${current!=1}?'':'disable'">
+										<span th:if='${current==1}'>&larr;</span>
+										<a th:if='${current!=1}' th:href="@{/browse/{device}/{dataset}/{number}(device=${settingsForm.activedeviceid},dataset=${settingsForm.dataset},number=${current-1})}" title='Go to previous page'>&larr;</a>
+									</li>
+									<li	th:each="item : ${#numbers.sequence(pager.getStartPage(), pager.getEndPage())}" th:class="${item==current?'active':''}">
+										<span th:if='${item==current}' th:text="${item}">1</span>
+										<a th:if='${item!=current}' th:href="@{/browse/{device}/{dataset}/{number}(device=${settingsForm.activedeviceid},dataset=${settingsForm.dataset},number=${item})}">
+											<span th:text="${item}">1</span>
+										</a>
+									</li>
+									<li th:class="${current!=pager.getTotalPages()}?'':'disable'">
+										<span th:if='${current==pager.getTotalPages()}'>&rarr;</span>
+										<a th:if='${current!=pager.getTotalPages()}' th:href="@{/browse/{device}/{dataset}/{number}(device=${settingsForm.activedeviceid},dataset=${settingsForm.dataset},number=${current+1})}" title='Go to next page'>&rarr;</a>
+									</li>
+									<li th:class="${current==pager.getTotalPages()}?'disable':''">
+										<span th:if='${current==pager.getTotalPages()}'>Last</span>
+										<a th:if='${current!=pager.getTotalPages()}' th:href="@{/browse/{device}/{dataset}/{number}(device=${settingsForm.activedeviceid},dataset=${settingsForm.dataset},number=${pager.getTotalPages()})}">Last</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>		
+				</div>
+			</div>
+				
+			
+
+	</body>
+</html>

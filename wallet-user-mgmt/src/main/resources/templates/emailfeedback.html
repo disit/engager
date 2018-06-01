@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html 	lang="en"
+		xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+    	<meta charset="utf-8"/>
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<title>Wallet EMAIL FEEDBACK</title>
+		
+		<link th:href="@{/image/favicon.png}" type="image/png" rel="icon"/>
+  
+        <link th:href="@{/css/wallet-template.css}" rel="stylesheet"/>
+   		<link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+   		<link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" rel="stylesheet"/>
+    	<link href="//fonts.googleapis.com/css?family=Raleway" rel="stylesheet"/>
+    	<link th:href="@{/css/leaflet/leaflet.css}" rel="stylesheet"/>
+  		<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+  		<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+        <script th:src="@{/css/leaflet/leaflet.js}"></script>
+    	<script th:src="@{/js/jquery.form.js}"></script>
+    </head>  
+	<body>
+    
+		<nav class="navbar navbar-admin navbar-fixed-top">
+      		<div class="container">
+        		<div class="navbar-header">
+          			<a class="navbar-brand" href="#">Wallet email feedback</a>
+        		</div>
+        		<div id="navbar" class="collapse navbar-collapse">
+         			<ul class="nav navbar-nav navbar-right">
+          			<li>
+			           <a th:href="@{/admin}">Done/back</a>
+					</li> 
+         			</ul>
+       			</div>
+           	</div>
+
+		</nav>
+		
+<!-- 		<sec:authorize access="isRememberMe()"> -->
+<!-- 			<h2># This user is login by "Remember Me Cookies".</h2> -->
+<!-- 		</sec:authorize> -->
+
+<!-- 		<sec:authorize access="isFullyAuthenticated()"> -->
+<!-- 			<h2># This user is login by username / password.</h2> -->
+<!-- 		</sec:authorize> -->
+		
+		
+     	<h1 th:inline="text">Hello <span sec:authentication="name"/><span sec:authentication="principal.authorities"/></h1>
+
+       		<div th:if="${name}">
+	       		name of the email campaign:<span style="color:blue" th:text="${name}"></span>
+			</div>
+
+<!-- 		<form method="post" action="/emailfeedback" th:action="@{/emailfeedback/{id}(id=${current})}">  -->
+	        <table class="table">
+				<tr>
+					<th>sent-time</th>
+					<th>feedback-time</th>
+					<th>confirmed-rejected</th>
+				</tr>
+			    <tr th:each="row : ${data}">
+		        	<td th:text="${row.sentTime}">1</td>
+		        	<td th:text="${row.feedbackTime}">1</td>
+		        	<td th:text="${row.confirmedRejected}">1</td>
+<!-- 		        	<td><a th:href="@{/ecosystem/{id}(id=${message[2]})}">Edit</a></td>	  -->
+<!-- 		        	<td> -->
+<!-- 		        		<button type="submit" name="removeid" th:value="${message[2]}" ><img th:src="@{/image/bin.jpg}" th:width="24" th:height="24"/></button> -->
+<!-- 		        	</td>       	 -->
+		    	</tr>
+		    	<tr th:if="${pager.getTotalPages() == 0}">
+		    		<td th:text="none">1</td>
+		    	</tr>
+	    	</table>
+
+		   	<div th:if="${pager.getTotalPages() &gt; 1}" class="col-md-12 text-center">
+		   		<div class="pagination pagination-centered">
+					<ul class="pagination">
+						<li th:class="${current==1}?'disable':''">
+							<span th:if='${current==1}'>First</span>
+							<a th:if='${current!=1}' th:href="@{/emailfeedback/1}">First</a>
+						</li>
+						<li th:class="${current!=1}?'':'disable'">
+							<span th:if='${current==1}'>&larr;</span>
+							<a th:if='${current!=1}' th:href="@{/emailfeedback/{number}(number=${current-1})}" title='Go to previous page'>&larr;</a>
+						</li>
+						<li	th:each="item : ${#numbers.sequence(pager.getStartPage(), pager.getEndPage())}" th:class="${item==current?'active':''}">
+							<span th:if='${item==current}' th:text="${item}">1</span>
+							<a th:if='${item!=current}' th:href="@{/emailfeedback/{number}(number=${item})}">
+								<span th:text="${item}">1</span>
+							</a>
+						</li>
+						<li th:class="${current!=pager.getTotalPages()}?'':'disable'">
+							<span th:if='${current==pager.getTotalPages()}'>&rarr;</span>
+							<a th:if='${current!=pager.getTotalPages()}' th:href="@{/emailfeedback/{number}(number=${current+1})}" title='Go to next page'>&rarr;</a>
+						</li>
+						<li th:class="${current==pager.getTotalPages()}?'disable':''">
+							<span th:if='${current==pager.getTotalPages()}'>Last</span>
+							<a th:if='${current!=pager.getTotalPages()}' th:href="@{/emailfeedback/{number}(number=${pager.getTotalPages()})}">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+       	    
+<!-- 		</form> -->
+		
+
+              
+       		<div th:if="${message}">
+	       		<p style="color:red" th:text="${message}"></p>
+			</div>
+	</body>
+</html>

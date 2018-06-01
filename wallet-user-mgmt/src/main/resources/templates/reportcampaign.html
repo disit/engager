@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html 	lang="en"
+		xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8"/>
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<title>Wallet report campaign</title>
+		
+		<link th:href="@{/image/favicon.png}" type="image/png" rel="icon"/>
+        <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/css/wallet-template.css}" rel="stylesheet"/>
+    </head>
+	<body>
+	
+		<nav class="navbar navbar-admin navbar-fixed-top">
+      		<div class="container">
+        		<div class="navbar-header">
+          			<a class="navbar-brand" href="#">Wallet report campaign</a>
+        		</div>
+        		<div id="navbar" class="collapse navbar-collapse">
+          			<ul class="nav navbar-nav navbar-right">
+	          			<li>
+				           <a th:href="@{/admin}">Exit/discard</a>
+						</li> 
+          			</ul>
+        		</div>
+        	</div>
+		</nav>
+		
+		<h1 th:inline="text">Hello <span sec:authentication="name"/><span sec:authentication="principal.authorities"/></h1>
+
+		<!-- we have just one manager per page -->
+
+		<div>MANAGER name:<p th:text="${userList.userList[0].username}"/>
+		</div>
+
+		<table class="table">
+			<tr>
+				<th>campaign name</th>
+				<th>status</th>
+				<th>startdate</th>
+				<th>enddate</th>
+			</tr>
+		    <tr th:each="campaign, row : ${campaigns}">
+    	    	<td>
+        			<p th:text="${campaign.name}"/>
+        		</td>
+        		<td> 
+	        		<p th:text="${campaignstatus[row.index].status}"/>
+	        		<p th:if="${campaignstatus[row.index].status == T(edu.unifi.disit.wallet_user_mngt.datamodel.CampaignStatustype).CAMPAIGNSTATUS_ACTIVE}" th:text="${campaignstatus[row.index].progress + '-th day on ' +  campaignstatus[row.index].total}"/>
+	        		<p th:if="${campaignstatus[row.index].status == T(edu.unifi.disit.wallet_user_mngt.datamodel.CampaignStatustype).CAMPAIGNSTATUS_WAITING}" th:text="${campaignstatus[row.index].progress + ' days to start' }"/>
+	        	</td>
+	        	<td>
+	        		<p th:text="${campaign.startDate}"/>
+	        	</td>
+	        	<td>
+	        		<p th:text="${campaign.endDate}"/>
+	        	</td>	        	
+	        	<td><a th:href="@{/showcampaign/{id}(id=${campaign.id})}">Show</a></td>
+			</tr>
+			<tr th:if="${campaigns.empty}">
+    			<td th:text="none"/>
+    		</tr>
+		</table>
+
+	   	<div th:if="${pager.getTotalPages() &gt; 1}" class="col-md-12 text-center">
+	   		<div class="pagination pagination-centered">
+				<ul class="pagination">
+					<li th:class="${current==1}?'disable':''">
+						<span th:if='${current==1}'>First</span>
+						<a th:if='${current!=1}' th:href="@{/reportcampaign/1}">First</a>
+					</li>
+					<li th:class="${current!=1}?'':'disable'">
+						<span th:if='${current==1}'>&larr;</span>
+						<a th:if='${current!=1}' th:href="@{/reportcampaign/{number}(number=${current-1})}" title='Go to previous page'>&larr;</a>
+					</li>
+					<li	th:each="item : ${#numbers.sequence(pager.getStartPage(), pager.getEndPage())}" th:class="${item==current?'active':''}">
+						<span th:if='${item==current}' th:text="${item}">1</span>
+						<a th:if='${item!=current}' th:href="@{/reportcampaign/{number}(number=${item})}">
+							<span th:text="${item}">1</span>
+						</a>
+					</li>
+					<li th:class="${current!=pager.getTotalPages()}?'':'disable'">
+						<span th:if='${current==pager.getTotalPages()}'>&rarr;</span>
+						<a th:if='${current!=pager.getTotalPages()}' th:href="@{/reportcampaign/{number}(number=${current+1})}" title='Go to next page'>&rarr;</a>
+					</li>
+					<li th:class="${current==pager.getTotalPages()}?'disable':''">
+						<span th:if='${current==pager.getTotalPages()}'>Last</span>
+						<a th:if='${current!=pager.getTotalPages()}' th:href="@{/reportcampaign/{number}(number=${pager.getTotalPages()})}">Last</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+  
+	</body>
+</html>

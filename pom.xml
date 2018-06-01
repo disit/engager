@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+    
+	<modelVersion>4.0.0</modelVersion>
+    <groupId>edu.unifi.disit</groupId>
+    <artifactId>engager</artifactId>
+    <packaging>pom</packaging>
+	<version>${engager-version}</version>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<engager-version>3.0.0</engager-version>
+		<engager-utils-version>3.0.0</engager-utils-version>
+		<drools-version>6.0.0-SNAPSHOT</drools-version>
+	</properties>
+	
+    <modules>
+		<module>survey-collector-api</module>		
+        <module>engager-api</module>	
+		<module>executorchecker-surveys</module>
+    </modules>
+	
+	<dependencies>
+		<dependency>
+			<groupId>edu.unifi.disit</groupId>			
+			<artifactId>commons</artifactId>
+			<version>1.0.0</version>
+		</dependency>	
+	</dependencies>
+		
+		
+		
+</project>

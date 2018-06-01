@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html 	lang="en"
+		xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+    	<meta charset="utf-8"/>
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<title>Wallet campaign</title>
+		
+		<link th:href="@{/image/favicon.png}" type="image/png" rel="icon"/>
+        <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/css/wallet-template.css}" rel="stylesheet"/>
+    </head>
+    <body>
+
+		<nav class="navbar navbar-manager navbar-fixed-top">
+      		<div class="container">
+        		<div class="navbar-header">
+          			<a class="navbar-brand" href="#">Wallet campaign</a>
+        		</div>
+        		<div id="navbar" class="collapse navbar-collapse">
+          			<ul class="nav navbar-nav navbar-right">
+    	  				<a th:href="@{/manager}">Exit/discard</a> 
+		  			</ul>
+        		</div>
+        	</div>
+		</nav>
+  	
+		<h1 th:inline="text">Hello <span sec:authentication="name"/><span sec:authentication="principal.authorities"/></h1>
+       
+		<form method="post" action="/campaign" th:action="@{/campaign/{campid}(campid=${campid})}"  > 
+       
+			<p>Name campagna: <input type="text" th:field="${campaign.name}" name="name"/></p><p style="color:red" th:if="${#fields.hasErrors('campaign.name')}" th:errors="${campaign.name}"/>
+			<p>Howmany: <input type="number" th:field="${campaign.howmany}" name="howmany"/></p><p style="color:red" th:if="${#fields.hasErrors('campaign.howmany')}" th:errors="${campaign.howmany}"/>
+			<p>Rate: <input type="number" th:field="${campaign.rate}" name="rate"/></p><p style="color:red" th:if="${#fields.hasErrors('campaign.rate')}" th:errors="${campaign.rate}"/>
+			<p>StartDate: <input type="text" th:field="${campaign.startDate}" name="startDate"/></p><p style="color:red" th:if="${#fields.hasErrors('campaign.startDate')}" th:errors="${campaign.startDate}"/>
+			<p>EndDate: <input type="text" th:field="${campaign.endDate}" name="endDate"/></p><p style="color:red" th:if="${#fields.hasErrors('campaign.endDate')}" th:errors="${campaign.endDate}"/>
+  			<input type="hidden" th:field="${campaign.id}" name="id"/>
+			
+			<p>Ecosystem:
+				<div class="form-group row">
+				<select class="form-control" th:field="${campaign.ecosystem.id}">
+				<div>
+					<option value="-1">-- Select --</option>
+					<option th:each="eco : ${ecosystemList}" th:value="${eco.id}" th:text="${eco.name}" th:selected="(${eco.id} == ${campaign.ecosystem.id})"/>
+					</div>
+	       		</select>
+		   		</div>
+	    	</p>
+	    	<p style="color:red" th:if="${#fields.hasErrors('campaign.ecosystem.id')}" th:errors="${campaign.ecosystem.id}"/>
+	
+			<table class="table">
+			<tr>
+				<th>Prizes_name</th>
+				<th>Prizes_value</th>
+			</tr>
+		    <tr th:each="prize, row: ${prizeListForm.prizeList}">
+	        	<td>
+	        		<input type="text" th:field="${prizeListForm.prizeList[__${row.index}__].name}"  />
+	        	</td>
+	        	<td>
+	        		<input type="number" th:field="${prizeListForm.prizeList[__${row.index}__].value}"  />
+	        	</td>
+	        	<td>
+					<button type="submit" name="removeid" th:value="${row.index}" ><img th:src="@{/image/bin.jpg}" th:width="24" th:height="24"/></button>
+	        	</td>
+	    	</tr>
+	    	<tr th:if="${prizeListForm.prizeList.empty}">
+	    		<td th:text="none">1</td>
+	    	</tr>
+
+    		</table>
+	    	<p style="color:red" th:if="${#fields.hasErrors('prizeListForm.prizeList')}" th:errors="${prizeListForm.prizeList}"/>
+	    	<input type="submit" name="Add" value="Add new Prize"/>
+	    	<br/>
+       
+	    	<input type="submit" name="Save" value="Save" />
+
+			<div style="color:blue" th:if="${message}">
+	        	<p th:text="${message}"></p>
+			</div>
+	    </form>
+
+		<div style="color:red" th:if="${error}">
+            <p th:text="${error}" />
+        </div>   				
+    
+	</body>
+</html>

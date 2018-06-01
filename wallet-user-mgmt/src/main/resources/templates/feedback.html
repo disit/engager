@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html 	lang="en"
+		xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+    	<meta charset="utf-8"/>
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<title>Wallet USER FEEDBACK</title>
+		
+		<link th:href="@{/image/favicon.png}" type="image/png" rel="icon"/>
+  
+        <link th:href="@{/css/wallet-template.css}" rel="stylesheet"/>
+   		<link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+   		<link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" rel="stylesheet"/>
+    	<link href="//fonts.googleapis.com/css?family=Raleway" rel="stylesheet"/>
+    	<link th:href="@{/css/leaflet/leaflet.css}" rel="stylesheet"/>
+  		<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+  		<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+        <script th:src="@{/css/leaflet/leaflet.js}"></script>
+    	<script th:src="@{/js/jquery.form.js}"></script>
+    </head>  
+	<body>
+       
+       <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+			<div class="navbar-header ">      	
+       			<img th:src="@{/image/disitlogo.png}" style="height: 40px; float: left; max-width: 200px; cursor: pointer; margin-top: 6px;" onclick="window.open('http://www.disit.org')"/>
+		    </div>
+ 		</nav>
+       
+        <div class="container" >
+			<div th:if="${stringForm!=null}">
+	            <form th:action="@{/feedback/cancel}"  method="post" th:object="${stringForm}">           	
+	            	Do you really want to not receive anymore this kind of emails?<br/>
+	            	<input type="hidden" th:value="${stringForm.string}" th:field="*{string}"/><br/>
+	               	<input type="submit" class="btn btn-primary" value="Confirm"/>               	
+	            </form>
+	            <form th:action="@{/feedback/cancel}" method="post">
+	            	<input type="submit" class="btn btn-primary"  value="No"/>
+	            </form>
+	        </div>
+
+			<div th:if="${error}">
+	            <p th:text="${error}"/>
+	        </div>
+			<div th:if="${user}">
+				An e-mail has been sent to <p th:text="${user.username}"></p>
+			</div>
+		</div>
+		
+	</body>
+</html>

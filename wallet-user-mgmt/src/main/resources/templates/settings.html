@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html 	lang="en"
+		xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+    	<meta charset="utf-8"/>
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<title>Wallet USER SETTINGS</title>
+		
+		<link th:href="@{/image/favicon.png}" type="image/png" rel="icon"/>
+  
+        <link th:href="@{/css/wallet-template.css}" rel="stylesheet"/>
+   		<link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+   		<link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" rel="stylesheet"/>
+    	<link href="//fonts.googleapis.com/css?family=Raleway" rel="stylesheet"/>
+    	<link th:href="@{/css/leaflet/leaflet.css}" rel="stylesheet"/>
+  		<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+  		<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+        <script th:src="@{/css/leaflet/leaflet.js}"></script>
+    	<script th:src="@{/js/jquery.form.js}"></script>
+	</head>
+    <body>
+       
+		<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+			<div class="navbar-header ">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
+            		<span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>                        
+		      	</button>
+		      	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2">
+            		<span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>                        
+		      	</button>
+		      	
+      			<a class="navbar-brand" th:href="@{/}"><i class="fa fa-home fa-4" style="font-size: 24px;" aria-hidden="true"></i></a>
+      			<img th:src="@{/image/disitlogo.png}" style="height: 40px; float: left; max-width: 200px; cursor: pointer; margin-top: 6px;" onclick="window.open('http://www.disit.org')"/>
+		    </div>
+    		<div class="collapse navbar-collapse" id="myNavbar1">
+      			<ul class="nav navbar-nav navbar-right">
+      			 	<li><a th:href="@{/howto}">Come funziona</a></li>
+      			 	<li><a href="#">Guadagna punti</a></li>
+      			 	<li><a href="#">Premi</a></li>
+      			 	<li><a href="#">Termini d'uso</a></li>      			 	
+					<li><!-- error messages -->
+       					<div th:if="${param.successregistration}">
+           					<p class="navbar-brand" th:text="${successregistration}"></p>
+       					</div>
+       				</li>
+					<li>
+				   		<div th:if="${message}">
+					    	<p class="navbar-brand" th:text="${message}"></p>
+				    	</div>
+				    </li>
+					<li>Benvenuto<br/><div sec:authentication="name"/></li>
+					<li><form th:action="@{/logout}" method="post"><input type="submit" class="btn btn-primary"  value="Esci"/></form></li>
+				</ul>
+			</div>
+			<div class="navbar-user collapse navbar-collapse" id="myNavbar2">
+                <ul class="nav navbar-nav navbar-center">
+                   	<li sec:authorize="hasAuthority('ROLE_USER')"><a th:href="@{/user}">Home</a></li>
+                    <li><a th:href="@{/profile}">Profilo</a></li>
+                    <li><a th:href="@{/activities}">Attività</a></li>
+                    <li><a th:href="@{/settings}">Impostazioni</a></li>
+                    <li><a th:href="@{/privacy}">Privacy</a></li>
+                </ul>
+            </div>
+		</nav>
+            
+ 		<div class="col-sm-6 col-sm-offset-3">       
+			<div class="mypanel panel panel-default">
+				<div class="panel-body">                           
+					<form method="post" action="/settings" th:action="@{/settings}" th:object="${settingsForm}"> 
+			        	<table>
+				        	<tr th:each="message : ${inputsettings}">
+				        		<!-- name of the settings: filter out if is the name is VISIBLE and the user is USER-->
+								<div th:if="${#strings.contains(message.key,'PARTECIPA')}">
+									<div sec:authorize="hasAuthority('ROLE_USER')">
+										<td class="col_name">
+  											<span th:text="${message.key}">1</span>
+											<img th:src="@{/image/info-icon.png}" title="Per partecipare alla campagna &#013;promozionale in corso selezionare -SI-"/>
+										</td>
+									</div>
+					        	</div>
+					        	<!-- else -->  
+								<div th:unless="${#strings.contains(message.key,'PARTECIPA')}">
+									<td th:text="${message.key}">1</td>
+								</div>
+					        	<!-- value of the settings: filter out if is the name is VISIBLE and the user is USER-->
+								<div th:if="${#strings.contains(message.key,'PARTECIPA')}">
+									<div sec:authorize="hasAuthority('ROLE_USER')">
+					            		<td>
+						            		<select class="form-control" th:field="*{properties[__${message.key}__]}">
+												<div>
+													<option th:value="true" th:text="si" th:selected="(${'true'} == *{properties[__${message.key}__]})"/>
+													<option th:value="false" th:text="no" th:selected="(${'false'} == *{properties[__${message.key}__]})"/>
+												</div>
+			       							</select>
+					            		</td>
+					            	</div>
+					        	</div>
+					        	<!-- if passsword set it in the type-->
+								<div th:if="${#strings.contains(message.key,'PASSWORD')}">
+					            	<td><input type="password" th:value="${message.value}" th:field="*{properties[__${message.key}__]}"/></td>
+					        	</div>  
+								<div th:unless="${#strings.contains(message.key,'PASSWORD') or #strings.contains(message.key,'PARTECIPA')}">
+						            <td><input type="text" th:value="${message.value}" th:field="*{properties[__${message.key}__]}"/></td>
+						        </div>  
+					    	</tr> 	
+					    </table>
+					    <!-- error msg -->
+						<div th:if="${param.error}">
+			            	<p style="color:red"  th:text="${error}" />
+			        	</div>  
+					    <input type="submit" value="Salva"/>	 			
+					    <div th:if="${param.message}">
+							<p style="color:blue" th:text="${message}"></p>
+						</div>   
+					</form>
+				</div>
+			</div>
+			<div class="mypanel panel panel-default" >
+				<div class="panel-body">   	
+					<div th:if="${isconfirmed} == true">
+					     Il tuo account email è verificato
+				     </div>
+				     <div th:if="${isconfirmed} == false">
+					     Il tuo account email non è verificato. Clicca <a th:href="@{/confirmemail}">qui</a> 
+				     </div>
+				</div>
+			</div>	    
+		</div>
+	</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html 	lang="en"
+		xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+    	<meta charset="utf-8"/>
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<title>Wallet ecosystem</title>
+		
+		<link th:href="@{/image/favicon.png}" type="image/png" rel="icon"/>
+        <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/css/wallet-template.css}" rel="stylesheet"/>       
+    </head>
+    <body>
+
+		<nav class="navbar navbar-admin navbar-fixed-top">
+      		<div class="container">
+        		<div class="navbar-header">
+          			<a class="navbar-brand" href="#">Wallet ecosystem</a>
+        		</div>
+        		<div id="navbar" class="collapse navbar-collapse">
+          			<ul class="nav navbar-nav navbar-right">
+    	  				<a th:href="@{/admin}">Exit/discard</a> 
+		  			</ul>
+        		</div>
+        	</div>
+		</nav>
+        
+		<h1 th:inline="text">Hello <span sec:authentication="name"/><span sec:authentication="principal.authorities"/></h1>
+        
+		<form method="post" action="/ecosystem" th:action="@{/ecosystem/{id}(id=${ecoid})}"  > 
+  			<p>Name ecosistema: <input type="text" th:field="${ecosystem.name}" name="name"/></p><p style="color:red" th:if="${#fields.hasErrors('ecosystem.name')}" th:errors="${ecosystem.name}"/>
+			<table class="table">
+				<tr>
+					<th>Rules avaialable</th>
+				</tr>
+	    		<tr th:each="rule, row: ${myrules.ruleList}">
+        			<td>
+						<p th:text="${myrules.ruleList[__${row.index}__].name}"></p>
+        				<input type="hidden" th:field="${myrules.ruleList[__${row.index}__].name}"  />
+        				<input type="hidden" th:field="${myrules.ruleList[__${row.index}__].id}"  />
+        			</td>
+        			<td>
+	        			<button type="submit" name="removeid" th:value="${row.index}" ><img th:src="@{/image/bin.jpg}" th:width="24" th:height="24"/></button>	   	        	
+					</td>
+    			</tr>
+    			<tr th:if="${myrules.ruleList.empty}">
+    				<td th:text="none">1</td>
+    			</tr>
+   			</table>
+    	
+			<div class="form-group row">
+				<select class="form-control" th:field="${ruletoadd.id}">
+					<div>
+						<option value="-1">-- Select --</option>
+						<option th:each="rulez : ${allrules}" th:value="${rulez.id}" th:text="${rulez.name}" th:selected="(${rulez.id} == ${ruletoadd.id})"/>
+					</div>
+       			</select>
+       			<input type="submit" name="Add" value="Add new RULEz"/>
+	   		</div>
+
+	    	<input type="submit" name="Save" value="Save" />
+
+			<div style="color:blue" th:if="${message}">
+	        	<p th:text="${message}"></p>
+			</div>
+	    </form>
+	    
+		<div style="color:red" th:if="${error}">
+            <p th:text="${error}" />
+        </div>   				
+	</body>
+</html>

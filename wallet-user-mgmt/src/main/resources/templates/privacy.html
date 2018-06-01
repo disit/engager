@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html 	lang="en"
+		xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+    	<meta charset="utf-8"/>
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<title>Wallet USER PRIVACY</title>
+		
+		<link th:href="@{/image/favicon.png}" type="image/png" rel="icon"/>
+  
+        <link th:href="@{/css/wallet-template.css}" rel="stylesheet"/>
+   		<link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+   		<link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" rel="stylesheet"/>
+    	<link href="//fonts.googleapis.com/css?family=Raleway" rel="stylesheet"/>
+    	<link th:href="@{/css/leaflet/leaflet.css}" rel="stylesheet"/>
+  		<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+  		<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+        <script th:src="@{/css/leaflet/leaflet.js}"></script>
+    	<script th:src="@{/js/jquery.form.js}"></script>
+    	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"/>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	</head>
+    <body>
+    
+    <script th:inline="javascript">
+/*<![CDATA[*/
+    var url = [[${url}]]; //Your Thymleaf variable
+    window.onload = function() {
+        if(!url)
+            return; // Exit/Return if the variable is false
+        window.location.href = url; //open for download
+    };
+/*]]>*/
+</script>
+    
+    
+<script type="text/javascript">
+	function myFunction(elem){
+    	var dialog = $("<div>Are you sure?</div>");
+	
+    	var name = elem.name;
+    	
+    	$(dialog).dialog({
+	        resizable: false,
+// 	        height: 140,
+	        autoOpen: true,
+// 	        width: 250,
+	        modal: true,
+	        buttons: {
+	            "Yes": function() {
+	            	var input = $("<input/>")
+	                	.attr("type", "hidden")
+	                	.attr("name", name).val("bla");
+	 				$('#myform').append($(input));
+	                $('#myform').submit();
+	            },
+	            No: function() {
+	                $(this).dialog("close");
+	            }
+	        }
+    	});
+    }
+
+//     $(function() {
+//         $("#dialog-confirm").dialog({
+//             resizable: false,
+//             height: 140,
+//             autoOpen: false,
+//             width: 250,
+//             modal: true,
+//             buttons: {
+//                 "Yes": function() {
+//                 	$(this).attr('value');
+//                     $('#myform').submit();
+//                 },
+//                 No: function() {
+//                     $(this).dialog("close");
+//                 }
+//             }
+//         });
+
+//         $('#moveOn').on('click', function(e) {
+//             $("#dialog-confirm").dialog('open');
+//         });
+//     });
+</script>    
+       
+		<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+			<div class="navbar-header ">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
+            		<span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>                        
+		      	</button>
+		      	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2">
+            		<span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>                        
+		      	</button>
+		      	
+      			<a class="navbar-brand" th:href="@{/}"><i class="fa fa-home fa-4" style="font-size: 24px;" aria-hidden="true"></i></a>
+      			<img th:src="@{/image/disitlogo.png}" style="height: 40px; float: left; max-width: 200px; cursor: pointer; margin-top: 6px;" onclick="window.open('http://www.disit.org')"/>
+		    </div>
+    		<div class="collapse navbar-collapse" id="myNavbar1">
+      			<ul class="nav navbar-nav navbar-right">
+      			 	<li><a th:href="@{/howto}">Come funziona</a></li>
+      			 	<li><a href="#">Guadagna punti</a></li>
+      			 	<li><a href="#">Premi</a></li>
+      			 	<li><a href="#">Termini d'uso</a></li>      			 	
+					<li><!-- error messages -->
+       					<div th:if="${param.successregistration}">
+           					<p class="navbar-brand" th:text="${successregistration}"></p>
+       					</div>
+       				</li>
+					<li>
+				   		<div th:if="${message}">
+					    	<p class="navbar-brand" th:text="${message}"></p>
+				    	</div>
+				    </li>
+					<li>Benvenuto<br/><div sec:authentication="name"/></li>
+					<li><form th:action="@{/logout}" method="post"><input type="submit" class="btn btn-primary"  value="Esci"/></form></li>
+				</ul>
+			</div>
+			<div class="navbar-user collapse navbar-collapse" id="myNavbar2">
+                <ul class="nav navbar-nav navbar-center">
+                   	<li sec:authorize="hasAuthority('ROLE_USER')"><a th:href="@{/user}">Home</a></li>
+                    <li><a th:href="@{/profile}">Profilo</a></li>
+                    <li><a th:href="@{/activities}">Attività</a></li>
+                    <li><a th:href="@{/settings}">Impostazioni</a></li>
+                    <li><a th:href="@{/privacy}">Privacy</a></li>
+                </ul>
+            </div>
+		</nav>
+    
+	 	<form id="myform" method="post" th:action="@{/privacy}" th:object="${pf}"> 
+			<div class="col-sm-6 col-sm-offset-3"> 
+				<div class="mypanel panel panel-default" th:if="${pf.consents==null or #lists.size(pf.consents)==0}">
+					<div class="panel-body">               
+						No datasets available
+					</div>								
+				</div>
+				<div class="mypanel panel panel-default" th:if="${pf.consents!=null and #lists.size(pf.consents)>=1}" >
+					<div class="panel-body">
+						<table class="table table-bordered table-hover specialCollapse">
+							<thead>
+						    	<tr>
+						    	 	<th></th>
+								    <th>Dataset</th>
+								    <th>Consent</th>
+							  	</tr>
+							</thead>
+							<tbody>
+					        	<tr th:each="consent, iter : ${pf.consents}">
+					        	
+					        		<input type="hidden" th:field="*{consents[__${iter.index}__].dataset}" />
+	
+					        		<td><input type="radio" th:field="*{choosen}" th:value="${iter.index}" /></td>
+					        	
+						        	<td th:text="${consent.dataset.label}">1</td>
+						        	<td>
+						        		<select class="form-control" th:field="*{consents[__${iter.index}__].consent}">
+											<div>
+												<option th:value="true" th:text="${'yes'}" th:selected="*{consents[__${iter.index}__].consent} == true"/>
+												<option th:value="false" th:text="${'not'}" th:selected="*{consents[__${iter.index}__].consent} == false"/>
+											</div>
+	 			       					</select>
+						        	</td>
+						        	
+						    	</tr>
+					    	</tbody>
+					    </table>
+					    <div class="pull-right" th:if="${message!=null}">
+							<p style="color:blue" th:text="${message}"></p>
+						</div> 
+						<div class="pull-right" > 
+							<input type="submit" name="save" value="save" />
+						</div>
+					</div>		
+				</div>
+				
+				<div th:if="${error!=null}">
+	            	<p style="color:red"  th:text="${error}" />
+	        	</div>  
+				<div th:if="${message2!=null}">
+	            	<p style="color:blue"  th:text="${message2}" />
+	        	</div>  
+	        	
+<!-- 	        	<div id="dialog-confirm"> -->
+<!-- 				    <p>Are you sure?</p> -->
+<!-- 				</div> -->
+	        	
+				<input type="submit" name="browse" value="browse" /><br/>
+				<input type="submit" name="download" value="download" /><br/>
+<!-- 				<input type="submit" name="delete" value="delete" /><br/> -->
+			
+			    <input type="button" onClick="myFunction(this)" name="delete" value="delete" />
+<!-- 				<input type="submit" name="forget" value="forget" /><br/> -->
+				 <input type="button" onClick="myFunction(this)" name="forget" value="forget" />
+				<br/>
+<!-- 				<input type="submit" name="remove" value="forget ALL" /><br/> -->
+<!-- 				<input type="button" id="moveOn" name="remove" value="forget ALL" /> -->
+			<input type="button" onClick="myFunction(this)" name="remove" value="forget ALL" />
+			</div>
+		</form>
+
+	</body>
+</html>

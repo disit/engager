@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html 	lang="en"
+		xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8"/>
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		
+		<title>Wallet edit users</title>
+		
+		<link th:href="@{/image/favicon.png}" type="image/png" rel="icon"/>
+        <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/css/wallet-template.css}" rel="stylesheet"/>
+    </head>
+	<body>
+	
+		<nav class="navbar navbar-admin navbar-fixed-top">
+      		<div class="container">
+        		<div class="navbar-header">
+          			<a class="navbar-brand" href="#">Wallet edit users</a>
+        		</div>
+        		<div id="navbar" class="collapse navbar-collapse">
+          			<ul class="nav navbar-nav navbar-right">
+	          			<li>
+				           <a th:href="@{/admin}">Exit/discard</a>
+						</li> 
+          			</ul>
+        		</div>
+        	</div>
+		</nav>
+		
+		<h1 th:inline="text">Hello <span sec:authentication="name"/><span sec:authentication="principal.authorities"/></h1>
+
+		<form method="post" action="/editusers" th:action="@{/editusers/{id}(id=${pageNumber1})}"  > 
+			<table class="table">
+				<tr>
+					<th>user</th>
+					<th>role</th>
+					<th>ecosystems</th>
+				</tr>
+			    <tr th:each="user, row : ${userList.userList}">
+	    	    	<td>
+	        			<p th:text="${userList.userList[__${row.index}__].username}"></p>
+						<input type="hidden" th:field="${userList.userList[__${row.index}__].id}"  />
+	        		</td>
+ 	        		<td>
+						<div class="form-group row">
+							<select class="form-control" th:field="${roletypeList.roletypeList[__${row.index}__]}">
+								<option th:each="role : ${T(edu.unifi.disit.wallet_user_mngt.datamodel.Roletype).values()}" th:value="${role}" th:text="${role}"/>
+			       			</select>			   		
+			   			</div>
+			    	</td>
+					<td>
+						<table class="table">
+							<tr th:each="eco, rowEco:${ecoList.ecosystemListForm[__${row.index}__].ecosystemList}">
+								<td>
+									<p th:if="${roletypeList.roletypeList[__${row.index}__] == T(edu.unifi.disit.wallet_user_mngt.datamodel.Roletype).ROLE_MANAGER}" th:text="${ecoList.ecosystemListForm[__${row.index}__].ecosystemList[__${rowEco.index}__].name}"></p>
+									<input type="hidden" th:field="${ecoList.ecosystemListForm[__${row.index}__].ecosystemList[__${rowEco.index}__].id}"  />
+									<input type="hidden" th:field="${ecoList.ecosystemListForm[__${row.index}__].ecosystemList[__${rowEco.index}__].name}"  />				
+								</td>
+								<td th:if="${roletypeList.roletypeList[__${row.index}__] == T(edu.unifi.disit.wallet_user_mngt.datamodel.Roletype).ROLE_MANAGER}">
+									<button type="submit" name="removeid" th:value="${rowEco.index+';'+ row.index}" ><img th:src="@{/image/bin.jpg}" th:width="24" th:height="24"/></button>
+								</td>
+							</tr>
+							<tr th:if="${roletypeList.roletypeList[__${row.index}__] == T(edu.unifi.disit.wallet_user_mngt.datamodel.Roletype).ROLE_MANAGER}">
+								<div class="form-group row">
+									<select class="form-control" th:field="${ecoList.ecosystemListForm[__${row.index}__].toadd}">
+										<div>
+											<option value="-1">-- Select --</option>
+											<option th:each="eco : ${allEcosystemList}" th:value="${eco.id}" th:text="${eco.name}"  th:selected="(${eco.id} == ${ecoList.ecosystemListForm[__${row.index}__].toadd})"/>
+										</div>
+		       						</select>
+			   					</div>
+			    				<input type="submit" name="Add" value="+ Ecosystema"/>						
+							</tr>
+						</table>
+					</td>
+		    	</tr> 	
+	    		<tr th:if="${pager1.getTotalPages() == 0}">
+	    			<td th:text="none">1</td>
+	    		</tr>
+    		</table>
+    	
+	    	<div th:if="${pager1.getTotalPages() &gt; 1}" class="col-md-12 text-center">
+		   		<div class="pagination pagination-centered">
+					<ul class="pagination">
+						<li th:class="${current1==1}?'disable':''">
+							<span th:if='${current1==1}'>First</span>
+							<a th:if='${current1!=1}' th:href="@{/editusers/1/}">First</a>
+						</li>
+						<li th:class="${current1!=1}?'':'disable'">
+							<span th:if='${current1==1}'>&larr;</span>
+							<a th:if='${current1!=1}' th:href="@{/editusers/{number1}(number1=${current1-1})}" title='Go to previous page'>&larr;</a>
+						</li>
+						<li	th:each="item : ${#numbers.sequence(pager1.getStartPage(), pager1.getEndPage())}" th:class="${item==current1?'active':''}">
+							<span th:if='${item==current1}' th:text="${item}">1</span>
+							<a th:if='${item!=current1}' th:href="@{/editusers/{number1}(number1=${item})}">
+								<span th:text="${item}">1</span>
+							</a>
+						</li>
+						<li th:class="${current1!=pager1.getTotalPages()}?'':'disable'">
+							<span th:if='${current1==pager1.getTotalPages()}'>&rarr;</span>
+							<a th:if='${current1!=pager1.getTotalPages()}' th:href="@{/editusers/{number1}(number1=${current1+1})}" title='Go to next page'>&rarr;</a>
+						</li>
+						<li th:class="${current1==pager1.getTotalPages()}?'disable':''">
+							<span th:if='${current1==pager1.getTotalPages()}'>Last</span>
+							<a th:if='${current1!=pager1.getTotalPages()}' th:href="@{/editusers/{number1}(number1=${pager1.getTotalPages()})}">Last</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+		    <input type="submit" name="Save" value="Save" />
+			<div th:if="${message}">
+	       		<p style="color:blue" th:text="${message}"></p>
+			</div>
+	  	</form>
+	  
+	</body>
+</html>

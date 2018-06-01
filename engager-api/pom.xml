@@ -1,0 +1,151 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>engager-api</artifactId>
+	<packaging>war</packaging>
+  
+	<parent>
+		<groupId>edu.unifi.disit</groupId>
+		<artifactId>engager</artifactId>
+		<version>${engager-version}</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+  
+	<dependencies>
+	<!-- my dependencies -->	
+			<dependency>
+			<groupId>edu.unifi.disit</groupId>			
+			<artifactId>commons</artifactId>
+			<version>3.0.0</version>
+		</dependency>	
+		<dependency>
+      		<groupId>disit</groupId>
+      		<artifactId>engager-siimobility</artifactId>
+      		<version>${drools-version}</version>
+    	</dependency>  
+    <!-- drools dependencies -->
+	    <dependency>
+	      	<groupId>org.drools</groupId>
+	      	<artifactId>drools-compiler</artifactId>
+	      	<version>6.3.0.Final</version>
+	    </dependency>
+	    <dependency>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-ci</artifactId>
+			<version>6.3.0.Final</version>
+		</dependency>
+    <!-- spring dependencies -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope><!--since it's always runned in tomcat container!!!-->
+			<version>1.5.2.RELEASE</version>
+		</dependency>
+	<!-- phoenix dependencies -->
+		<dependency>
+		    <groupId>jdk.tools</groupId>
+		    <artifactId>jdk.tools</artifactId>
+<!-- 		    <scope>system</scope> -->
+		    <version>1.7</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.phoenix</groupId>
+		    <artifactId>phoenix-core</artifactId>
+		    <version>4.9.0-HBase-1.2</version>
+			<exclusions>
+        		<exclusion>  
+          			<groupId>org.apache.httpcomponents</groupId>
+          			<artifactId>httpclient</artifactId>
+        		</exclusion>
+        		<exclusion>  
+				    <groupId>com.google.inject</groupId>
+				    <artifactId>guice</artifactId>
+        		</exclusion>
+      		</exclusions> 
+		</dependency>	
+<!-- 		<dependency> -->
+<!-- 		    <groupId>com.google.inject</groupId> -->
+<!-- 		    <artifactId>guice</artifactId> -->
+<!-- 		    <version>4.0</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!--     		<groupId>org.eclipse.aether</groupId> -->
+<!--     		<artifactId>aether-impl</artifactId> -->
+<!--     		<version>0.9.0.M4</version> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 		    <groupId>jdk.tools</groupId> -->
+<!-- 		    <artifactId>jdk.tools</artifactId> -->
+<!-- 		    <scope>system</scope> -->
+<!-- 		    <version>1.7</version> -->
+<!-- 		    <systemPath>C:\Programs\Java\jdk1.7.0_80\lib\tools.jar</systemPath> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 		    <groupId>org.apache.phoenix</groupId> -->
+<!-- 		    <artifactId>phoenix-core</artifactId> -->
+<!-- 		    <version>4.9.0-HBase-1.2</version> -->
+<!-- 		</dependency> -->
+	</dependencies>
+  
+	<build>
+	    <plugins>
+	        <plugin>
+  				<groupId>org.apache.maven.plugins</groupId>
+  				<artifactId>maven-compiler-plugin</artifactId>
+  				<version>3.7.0</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-maven-plugin</artifactId>
+	            <version>1.5.2.RELEASE</version>
+	        </plugin>
+<!-- 			<plugin>TODO remove this dependencies (because needed by executer) -->
+<!-- 		        <artifactId>maven-resources-plugin</artifactId> -->
+<!-- 		        <version>3.0.2</version> -->
+<!-- 		        <executions> -->
+<!-- 		          <execution> -->
+<!-- 		            <id>copy-resources</id> -->
+<!-- 		            <phase>validate</phase> -->
+<!-- 		            <goals> -->
+<!-- 		              <goal>copy-resources</goal> -->
+<!-- 		            </goals> -->
+<!-- 		            <configuration> -->
+<!-- 		              <outputDirectory>${basedir}/src/main/resources</outputDirectory> -->
+<!-- 		              <resources>           -->
+<!-- 		                <resource> -->
+<!-- 		                  <directory>${basedir}/../survey-collector-api/src/main/resources</directory> -->
+<!-- 		                     <includes> -->
+<!-- 		                		<include>hibernate-local-sv.cfg.xml</include> -->
+<!-- 		              		 </includes> -->
+<!-- 		                  <filtering>true</filtering> -->
+<!-- 		                </resource> -->
+<!-- 		              </resources>               -->
+<!-- 		            </configuration>             -->
+<!-- 		          </execution> -->
+<!-- 		        </executions> -->
+<!-- 			</plugin> -->
+			<plugin>
+		        <artifactId>maven-war-plugin</artifactId>
+		        <version>2.6</version>
+		        <configuration>
+					<warSourceDirectory>WebContent</warSourceDirectory>
+					<failOnMissingWebXml>true</failOnMissingWebXml>
+					<attachClasses>true</attachClasses>
+		        </configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<url>${deploy.url}</url>
+					<server>${deploy.name}</server>
+				</configuration>
+			</plugin>
+	    </plugins>
+	</build>
+</project>

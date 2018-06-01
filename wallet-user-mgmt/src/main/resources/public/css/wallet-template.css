@@ -1,0 +1,88 @@
+.navbar-default {
+    font-family: 'Raleway', serif;
+}
+
+body {
+  padding-top: 150px;
+}
+
+.submitLink {
+  background-color: transparent !important;
+  border: none !important;
+  /*color: blue;*/
+  cursor: pointer !important;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.mypanel{
+	width: 640px;
+}
+
+textarea[name=ppoilabel] {
+	height: 2em;
+    resize: none;
+}
+
+/* submitLink:focus { */
+/*   outline: none !important; */
+/*   border-color: #FF0000 !important; */
+/*   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6) !important; */
+/* } */
+
+.divLast 
+{
+   border:1px;
+   border-color:Black;
+   border-style:solid;
+}
+
+.navbar .navbar-nav {
+    display: inline-block;
+    float: none;
+}
+
+.navbar .navbar-collapse {
+    text-align: center;
+}
+
+.navbar-user {
+    background-color:PowderBlue;
+/*     color:white !important; */
+}
+
+.navbar-manager {
+    background-color:#d691ed;
+    color:#ffffff;
+    border-radius:0;
+}
+
+.navbar-admin {
+    background-color:#9ee687;
+    color:#ffffff;
+    border-radius:0;
+}
+
+#ppoi { height: 600px; 
+	width: 600px;
+}
+
+#timeline { height: 600px; 
+	width: 600px;
+}
+
+
+select.form-control {
+/*     -webkit-appearance: button; */
+/*        -moz-appearance: button; */
+/*             appearance: button; */
+    width: auto;
+}
+
+.span12{
+    border:solid 1px grey;
+}
+
+.ui-dialog-titlebar {
+    display: none;
+}
