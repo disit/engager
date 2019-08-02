@@ -95,4 +95,12 @@ public class Predictions implements java.io.Serializable {
 			p.updateAccuracy(nTotalObservation);
 		}
 	}
+
+	protected int getNTotalObservation() {
+		return nTotalObservation;
+	}
+
+	protected HashMap<Integer, Prediction> getPredictions() {
+		return predictions;
+	}
 }

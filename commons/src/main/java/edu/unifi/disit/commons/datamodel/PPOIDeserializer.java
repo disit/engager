@@ -72,18 +72,17 @@ public class PPOIDeserializer extends StdDeserializer<PPOI> {
 		if (node.get("label") != null)
 			labelValue = node.get("label").asText();
 
-		if ((node.get("cpz") == null) || (node.get("address") == null) || (node.get("municipality") == null) || (node.get("number") == null)) {
-			// TODO retrieve info from serviceMap
-			cpzValue = "null";
-			addressValue = "null";
-			municipalityValue = "null";
-			numberValue = "null";
-		} else {
+		if (node.get("cpz") != null)
 			cpzValue = node.get("cpz").asText();
+
+		if (node.get("address") != null)
 			addressValue = node.get("address").asText();
+
+		if (node.get("municipality") != null)
 			municipalityValue = node.get("municipality").asText();
+
+		if (node.get("number") != null)
 			numberValue = node.get("number").asText();
-		}
 
 		return new PPOI(idValue, node.get("latitude").asDouble(), node.get("longitude").asDouble(), node.get("name").asText(),
 				(float) node.get("accuracy").asDouble(), cpzValue, addressValue,

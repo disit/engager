@@ -40,7 +40,7 @@ public class MyChecker implements IRuleChecker {
 		toreturn.add("confirm_ppoi_school_");// R6
 		toreturn.add("confirm_ppoi_work_");// R7
 		toreturn.add("spent_time_");// R8
-		toreturn.add("mobility_feedback_firenze_");// R9
+		toreturn.add("mobility_feedback_");// R9
 		toreturn.add("confirm_extrappoi_");// R10
 
 		toreturn.add("transport_previous_pisa_");// R11
@@ -52,6 +52,7 @@ public class MyChecker implements IRuleChecker {
 		toreturn.add("review_publictransport_firenze_");// R16
 
 		toreturn.add("survey_publictransport1_firenze_");// R17
+		toreturn.add("survey_publictransport2_firenze_");// R18
 
 		return toreturn;
 	}
@@ -64,8 +65,9 @@ public class MyChecker implements IRuleChecker {
 				r.getRule_name().startsWith("confirm_ppoi_school_") ||
 				r.getRule_name().startsWith("confirm_ppoi_work_") ||
 				r.getRule_name().startsWith("spent_time_") ||
-				r.getRule_name().startsWith("mobility_feedback_firenze_") ||
+				r.getRule_name().startsWith("mobility_feedback_") ||
 				r.getRule_name().startsWith("survey_publictransport1_firenze_") ||
+				r.getRule_name().startsWith("survey_publictransport2_firenze_") ||
 				r.getRule_name().startsWith("confirm_extrappoi_"))
 			// a survey has been sent (not depend on the result of the survey)
 			return dbi_engager.getSurveyDate(r.getId());
@@ -101,8 +103,9 @@ public class MyChecker implements IRuleChecker {
 				a.getAction_rulename().startsWith("confirm_ppoi_school_") ||
 				a.getAction_rulename().startsWith("confirm_ppoi_work_") ||
 				a.getAction_rulename().startsWith("spent_time_") ||
-				a.getAction_rulename().startsWith("mobility_feedback_firenze_") ||
+				a.getAction_rulename().startsWith("mobility_feedback_") ||
 				a.getAction_rulename().startsWith("survey_publictransport1_firenze_") ||
+				a.getAction_rulename().startsWith("survey_publictransport2_firenze_") ||
 				a.getAction_rulename().startsWith("confirm_extrappoi_"))
 			// a survey has been sent (depend on the result of the survey)
 			return (dbi_engager.retrieveSurvey(userId, a));
@@ -123,8 +126,9 @@ public class MyChecker implements IRuleChecker {
 				a.getAction_rulename().startsWith("confirm_ppoi_school_") ||
 				a.getAction_rulename().startsWith("confirm_ppoi_work_") ||
 				a.getAction_rulename().startsWith("spent_time_") ||
-				a.getAction_rulename().startsWith("mobility_feedback_firenze_") ||
+				a.getAction_rulename().startsWith("mobility_feedback_") ||
 				a.getAction_rulename().startsWith("survey_publictransport1_firenze_") ||
+				a.getAction_rulename().startsWith("survey_publictransport2_firenze_") ||
 				a.getAction_rulename().startsWith("confirm_extrappoi_"))
 			return (dbi_engager.retrieveCancelledRule(userId, a.getAction_rulename(), (a.getAction_bannedfor() * 60 * 1000)));
 		return false;

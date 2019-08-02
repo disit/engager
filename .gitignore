@@ -1,3 +1,11 @@
+*.svn
+.gitignore
+*.adoc
+*.bat
+
+docs/*
+test-performance-dbs/*
+
 # Compiled class file
 *.class
 

@@ -181,6 +181,7 @@ public class MultiHttpSecurityConfig {
 		protected void configure(HttpSecurity http) throws Exception {
 			http
 					.authorizeRequests()
+					/**/.antMatchers("/api/test").permitAll()
 					/**/.antMatchers("/howto").permitAll()
 					/**/.antMatchers("/vendor/**", "/js/**", "/css/**", "/image/**", "/social/**").permitAll()
 					/**/.antMatchers("/", "/home", "/home/**", "/registration", "/feedback", "/signin**", "/signin/**", "/signup/**").permitAll()// OTHER

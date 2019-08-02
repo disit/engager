@@ -22,6 +22,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,6 +56,11 @@ public class UserController {
 	private static final int INITIAL_PAGE_SIZE_6 = 5;
 
 	private static final String CAMPAIGN_PILOTA = "PILOTA";
+
+	@RequestMapping(value = "/api/test", method = RequestMethod.GET)
+	public ResponseEntity<String> engagerTest() {
+		return new ResponseEntity<String>("alive", HttpStatus.OK);
+	}
 
 	// HOME VIEW-----------------------------------------------------------------------------------------------------------
 	@RequestMapping(value = "/", method = RequestMethod.GET)

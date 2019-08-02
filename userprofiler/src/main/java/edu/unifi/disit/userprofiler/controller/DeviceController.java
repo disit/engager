@@ -43,6 +43,11 @@ public class DeviceController {
 	@Autowired
 	IDeviceService deviceService;
 
+	@RequestMapping(value = "/api/test", method = RequestMethod.GET)
+	public ResponseEntity<String> engagerTest() {
+		return new ResponseEntity<String>("alive", HttpStatus.OK);
+	}
+
 	// -------------------GET All Devices---------------------------------------------
 	@RequestMapping(value = "/api/v1/device/", method = RequestMethod.GET)
 	public ResponseEntity<List<Device>> getAllDevicesV1(

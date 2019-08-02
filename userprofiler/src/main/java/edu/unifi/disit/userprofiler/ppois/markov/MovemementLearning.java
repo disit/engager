@@ -157,7 +157,7 @@ public class MovemementLearning {
 
 	private List<Integer> createConditions() {
 		List<Integer> toreturn = new ArrayList<Integer>();
-		toreturn.add(8);// slots
+		toreturn.add(5);// slots
 		toreturn.add(7);// days
 		return toreturn;
 	}

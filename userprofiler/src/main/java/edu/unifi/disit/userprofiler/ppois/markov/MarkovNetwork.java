@@ -22,8 +22,11 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import edu.unifi.disit.commons.datamodel.Prediction;
 
+@JsonSerialize(using = MarkovNetworkSerializer.class)
 public class MarkovNetwork implements java.io.Serializable {
 
 	private static final long serialVersionUID = 2206648034826702853L;
@@ -168,5 +171,13 @@ public class MarkovNetwork implements java.io.Serializable {
 		}
 		toreturn = toreturn.concat("------------------------------------------\n");
 		return toreturn;
+	}
+
+	protected HashMap<List<Integer>, Predictions> getPredictionMatrix() {
+		return predictionMatrix;
+	}
+
+	protected List<String> getStatesLabel() {
+		return this.statesLabel;
 	}
 }
